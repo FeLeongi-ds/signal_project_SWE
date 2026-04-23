@@ -60,6 +60,15 @@ java -jar target/cardio_generator-1.0-SNAPSHOT.jar --patient-count 100 --output 
 - `websocket:<port>`: Streams the simulated data to WebSocket clients connected to the specified port.
 - `tcp:<port>`: Streams the simulated data to TCP clients connected to the specified port.
 
+## UML Models
+
+UML class diagrams for the four main subsystems of the CHMS are available in the [uml_models](uml_models/) directory. Each diagram is accompanied by a written explanation of the design choices.
+
+- [Alert Generation System](uml_models/alert_generation_system.png)
+- [Data Storage System](uml_models/data_storage_system.png)
+- [Patient Identification System](uml_models/patient_identification_system.png)
+- [Data Access Layer](uml_models/data_access_layer.png)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
