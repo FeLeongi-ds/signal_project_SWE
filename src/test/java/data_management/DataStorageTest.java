@@ -12,12 +12,18 @@ class DataStorageTest {
 
     @Test
     void testAddAndGetRecords() {
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
+        storage.clear();
         storage.addPatientData(1, 100.0, "WhiteBloodCells", 1714376789050L);
         storage.addPatientData(1, 200.0, "WhiteBloodCells", 1714376789051L);
 
         List<PatientRecord> records = storage.getRecords(1, 1714376789050L, 1714376789051L);
         assertEquals(2, records.size());
         assertEquals(100.0, records.get(0).getMeasurementValue());
+    }
+
+    @Test
+    void testGetInstanceReturnsSameStorage() {
+        assertSame(DataStorage.getInstance(), DataStorage.getInstance());
     }
 }

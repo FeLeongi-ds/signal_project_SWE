@@ -1,6 +1,8 @@
 package com.alerts;
 
-// Represents an alert
+/**
+ * Represents an alert raised by the monitoring system.
+ */
 public class Alert {
     private String patientId;
     private String condition;
@@ -22,5 +24,15 @@ public class Alert {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * Returns the alert priority. Plain alerts use normal priority; decorators can
+     * override this value dynamically.
+     *
+     * @return alert priority label
+     */
+    public String getPriority() {
+        return "NORMAL";
     }
 }

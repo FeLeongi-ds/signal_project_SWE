@@ -13,14 +13,25 @@ import com.alerts.AlertGenerator;
  * patient IDs.
  */
 public class DataStorage {
+    private static final DataStorage INSTANCE = new DataStorage();
+
     private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
 
     /**
      * Constructs a new instance of DataStorage, initializing the underlying storage
      * structure.
      */
-    public DataStorage() {
+    private DataStorage() {
         this.patientMap = new HashMap<>();
+    }
+
+    /**
+     * Returns the single shared data storage instance.
+     *
+     * @return singleton storage instance
+     */
+    public static DataStorage getInstance() {
+        return INSTANCE;
     }
 
     /**
@@ -76,6 +87,14 @@ public class DataStorage {
     }
 
     /**
+     * Removes all stored patients and records. This is useful when starting a new
+     * monitoring run or isolating unit tests that use the singleton instance.
+     */
+    public void clear() {
+        patientMap.clear();
+    }
+
+    /**
      * The main method for the DataStorage class.
      * Initializes the system, reads data into storage, and continuously monitors
      * and evaluates patient data.
@@ -85,7 +104,8 @@ public class DataStorage {
     public static void main(String[] args) {
         // DataReader is not defined in this scope, should be initialized appropriately.
         // DataReader reader = new SomeDataReaderImplementation("path/to/data");
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
+        storage.clear();
 
         // Assuming the reader has been properly initialized and can read data into the
         // storage

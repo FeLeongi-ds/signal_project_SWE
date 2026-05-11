@@ -20,7 +20,8 @@ class FileDataReaderTest {
         Files.writeString(tempDir.resolve("data.txt"),
                 "Patient ID: 1, Timestamp: 1000, Label: HeartRate, Data: 75.5\n");
 
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
+        storage.clear();
         new FileDataReader(tempDir.toString()).readData(storage);
 
         List<PatientRecord> records = storage.getRecords(1, 0, Long.MAX_VALUE);
@@ -34,7 +35,8 @@ class FileDataReaderTest {
         Files.writeString(tempDir.resolve("alerts.txt"),
                 "Patient ID: 2, Timestamp: 2000, Label: Alert, Data: triggered\n");
 
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
+        storage.clear();
         new FileDataReader(tempDir.toString()).readData(storage);
 
         List<PatientRecord> records = storage.getRecords(2, 0, Long.MAX_VALUE);
@@ -46,7 +48,8 @@ class FileDataReaderTest {
         Files.writeString(tempDir.resolve("alerts.txt"),
                 "Patient ID: 2, Timestamp: 3000, Label: Alert, Data: resolved\n");
 
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
+        storage.clear();
         new FileDataReader(tempDir.toString()).readData(storage);
 
         List<PatientRecord> records = storage.getRecords(2, 0, Long.MAX_VALUE);
@@ -58,7 +61,8 @@ class FileDataReaderTest {
         Files.writeString(tempDir.resolve("sat.txt"),
                 "Patient ID: 3, Timestamp: 4000, Label: Saturation, Data: 95%\n");
 
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
+        storage.clear();
         new FileDataReader(tempDir.toString()).readData(storage);
 
         List<PatientRecord> records = storage.getRecords(3, 0, Long.MAX_VALUE);
@@ -71,7 +75,8 @@ class FileDataReaderTest {
                 "this is not a valid line\n"
                 + "Patient ID: 1, Timestamp: 1000, Label: HeartRate, Data: 60.0\n");
 
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
+        storage.clear();
         new FileDataReader(tempDir.toString()).readData(storage);
 
         List<PatientRecord> records = storage.getRecords(1, 0, Long.MAX_VALUE);

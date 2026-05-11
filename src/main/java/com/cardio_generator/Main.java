@@ -45,7 +45,8 @@ public class Main {
     }
 
     private static void runMonitoring(String dataDir) throws IOException {
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
+        storage.clear();
         DataReader reader = new FileDataReader(dataDir);
         reader.readData(storage);
 

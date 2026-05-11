@@ -35,6 +35,8 @@ import java.util.ArrayList;
  * usage information.
  */
 public class HealthDataSimulator {
+    /** Single simulator instance used by the application entry point. */
+    private static final HealthDataSimulator INSTANCE = new HealthDataSimulator();
 
     /** Default number of patients to simulate when none is specified on the command line. */
     private static int patientCount = 50;
@@ -48,6 +50,18 @@ public class HealthDataSimulator {
     /** Shared random number generator used for task-start jitter. */
     private static final Random random = new Random();
 
+    private HealthDataSimulator() {
+    }
+
+    /**
+     * Returns the single simulator instance.
+     *
+     * @return singleton simulator instance
+     */
+    public static HealthDataSimulator getInstance() {
+        return INSTANCE;
+    }
+
     /**
      * Application entry point. Parses command-line arguments, initialises the
      * scheduler, and starts data generation for all simulated patients.
@@ -57,7 +71,10 @@ public class HealthDataSimulator {
      *                     {@code --output file:<dir>} is specified
      */
     public static void main(String[] args) throws IOException {
+        getInstance().run(args);
+    }
 
+    private void run(String[] args) throws IOException {
         parseArguments(args);
 
         scheduler = Executors.newScheduledThreadPool(patientCount * 4);
