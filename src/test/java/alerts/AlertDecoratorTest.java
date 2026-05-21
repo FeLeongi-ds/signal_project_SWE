@@ -26,5 +26,6 @@ class AlertDecoratorTest {
 
         assertEquals(60000L, repeated.getRepeatIntervalMillis());
         assertEquals(65000L, repeated.getNextCheckTime());
+        assertEquals("Low Blood Saturation (recheck every 60000 ms)", repeated.getCondition());
     }
 }

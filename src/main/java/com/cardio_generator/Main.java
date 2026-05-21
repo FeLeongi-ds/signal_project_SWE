@@ -4,9 +4,11 @@ import com.alerts.AlertGenerator;
 import com.data_management.DataReader;
 import com.data_management.DataStorage;
 import com.data_management.FileDataReader;
+import com.data_management.PatientWebSocketClient;
 import com.data_management.Patient;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 
 /**
@@ -23,6 +25,7 @@ public class Main {
      * <ul>
      *   <li>{@code DataStorage}: runs the DataStorage demonstration main method.</li>
      *   <li>{@code monitor [directory]}: reads generated file output and evaluates alerts.</li>
+     *   <li>{@code monitor-websocket <ws://host:port>}: receives live WebSocket data.</li>
      *   <li>any other arguments: forwarded to {@link HealthDataSimulator}.</li>
      * </ul>
      *
@@ -38,6 +41,12 @@ public class Main {
         if (args.length > 0 && args[0].equalsIgnoreCase("monitor")) {
             String dataDir = args.length > 1 ? args[1] : "output";
             runMonitoring(dataDir);
+            return;
+        }
+
+        if (args.length > 0 && args[0].equalsIgnoreCase("monitor-websocket")) {
+            String uri = args.length > 1 ? args[1] : "ws://localhost:8080";
+            runWebSocketMonitoring(uri);
             return;
         }
 
@@ -57,5 +66,13 @@ public class Main {
 
         System.out.println("Monitoring complete. Evaluated "
                 + storage.getAllPatients().size() + " patient(s).");
+    }
+
+    private static void runWebSocketMonitoring(String websocketUri) throws IOException {
+        DataStorage storage = DataStorage.getInstance();
+        storage.clear();
+        PatientWebSocketClient reader = new PatientWebSocketClient(URI.create(websocketUri));
+        reader.readData(storage);
+        System.out.println("Connected to " + websocketUri + ". Press Ctrl+C to stop monitoring.");
     }
 }

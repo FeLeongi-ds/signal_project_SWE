@@ -24,7 +24,7 @@ class AlertStrategyTest {
         List<Alert> alerts = strategy.checkAlert(patient, records);
 
         assertTrue(alerts.stream()
-                .anyMatch(a -> a.getCondition().equals("Critical Blood Pressure")));
+                .anyMatch(a -> a.getCondition().equals("High Systolic Blood Pressure")));
     }
 
     @Test

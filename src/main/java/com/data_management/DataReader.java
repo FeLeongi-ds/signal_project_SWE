@@ -10,4 +10,21 @@ public interface DataReader {
      * @throws IOException if there is an error reading the data
      */
     void readData(DataStorage dataStorage) throws IOException;
+
+    /**
+     * Stops a streaming reader. Batch readers can keep the default no-op behavior.
+     *
+     * @throws IOException if the reader cannot be stopped cleanly
+     */
+    default void stopReading() throws IOException {
+    }
+
+    /**
+     * Indicates whether this reader is currently receiving a live stream.
+     *
+     * @return true for active streaming readers
+     */
+    default boolean isStreaming() {
+        return false;
+    }
 }

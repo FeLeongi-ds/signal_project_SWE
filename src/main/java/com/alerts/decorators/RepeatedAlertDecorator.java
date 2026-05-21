@@ -20,4 +20,10 @@ public class RepeatedAlertDecorator extends AlertDecorator {
     public long getNextCheckTime() {
         return getTimestamp() + repeatIntervalMillis;
     }
+
+    @Override
+    public String getCondition() {
+        return getWrappedAlert().getCondition() + " (recheck every "
+                + repeatIntervalMillis + " ms)";
+    }
 }

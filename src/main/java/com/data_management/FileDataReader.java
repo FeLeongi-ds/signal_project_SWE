@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 public class FileDataReader implements DataReader {
 
     private String directory;
+    private PatientDataParser parser;
 
     /**
      * Constructs a FileDataReader that reads files from the specified directory.
@@ -22,6 +23,7 @@ public class FileDataReader implements DataReader {
      */
     public FileDataReader(String directory) {
         this.directory = directory;
+        this.parser = new PatientDataParser();
     }
 
     /**
@@ -55,27 +57,10 @@ public class FileDataReader implements DataReader {
         }
     }
 
-    // Expected format: Patient ID: 1, Timestamp: 123456, Label: HeartRate, Data: 75.5
     private void parseLine(String line, DataStorage dataStorage) {
-        try {
-            String[] parts = line.split(", ");
-            int patientId = Integer.parseInt(parts[0].split(": ")[1].trim());
-            long timestamp = Long.parseLong(parts[1].split(": ")[1].trim());
-            String label = parts[2].split(": ")[1].trim();
-            String dataStr = parts[3].split(": ")[1].trim();
-
-            double value;
-            if (dataStr.equals("triggered")) {
-                value = 1.0;
-            } else if (dataStr.equals("resolved")) {
-                value = 0.0;
-            } else {
-                value = Double.parseDouble(dataStr.replace("%", ""));
-            }
-
-            dataStorage.addPatientData(patientId, value, label, timestamp);
-        } catch (Exception e) {
-            System.err.println("Skipping malformed line: " + line);
-        }
+        parser.parse(line).ifPresentOrElse(data ->
+                dataStorage.addPatientData(data.getPatientId(), data.getMeasurementValue(),
+                        data.getRecordType(), data.getTimestamp()),
+                () -> System.err.println("Skipping malformed line: " + line));
     }
 }

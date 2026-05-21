@@ -29,7 +29,7 @@ class AlertGeneratorTest {
         alertGenerator.evaluateData(storage.getAllPatients().get(0));
 
         assertTrue(alertGenerator.getTriggeredAlerts().stream()
-                .anyMatch(a -> a.getCondition().contains("Critical Blood Pressure")));
+                .anyMatch(a -> a.getCondition().contains("High Systolic Blood Pressure")));
     }
 
     @Test
@@ -38,7 +38,30 @@ class AlertGeneratorTest {
         alertGenerator.evaluateData(storage.getAllPatients().get(0));
 
         assertTrue(alertGenerator.getTriggeredAlerts().stream()
-                .anyMatch(a -> a.getCondition().contains("Critical Blood Pressure")));
+                .anyMatch(a -> a.getCondition().contains("Low Systolic Blood Pressure")));
+    }
+
+    @Test
+    void testEarlierCriticalBloodPressureIsNotMissed() {
+        storage.addPatientData(1, 190.0, "SystolicPressure", 1000L);
+        storage.addPatientData(1, 120.0, "SystolicPressure", 2000L);
+        alertGenerator.evaluateData(storage.getAllPatients().get(0));
+
+        assertTrue(alertGenerator.getTriggeredAlerts().stream()
+                .anyMatch(a -> a.getCondition().contains("High Systolic Blood Pressure")
+                        && a.getTimestamp() == 1000L));
+    }
+
+    @Test
+    void testSpecificDiastolicBloodPressureMessages() {
+        storage.addPatientData(1, 55.0, "DiastolicPressure", 1000L);
+        storage.addPatientData(1, 125.0, "DiastolicPressure", 2000L);
+        alertGenerator.evaluateData(storage.getAllPatients().get(0));
+
+        assertTrue(alertGenerator.getTriggeredAlerts().stream()
+                .anyMatch(a -> a.getCondition().contains("Low Diastolic Blood Pressure")));
+        assertTrue(alertGenerator.getTriggeredAlerts().stream()
+                .anyMatch(a -> a.getCondition().contains("High Diastolic Blood Pressure")));
     }
 
     @Test

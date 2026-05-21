@@ -24,8 +24,8 @@ public class BloodPressureStrategy implements AlertStrategy {
 
         addTrendAlert(patient, systolic, alerts);
         addTrendAlert(patient, diastolic, alerts);
-        addThresholdAlert(patient, systolic, 90, 180, alerts);
-        addThresholdAlert(patient, diastolic, 60, 120, alerts);
+        addThresholdAlerts(patient, systolic, 90, 180, "Systolic", alerts);
+        addThresholdAlerts(patient, diastolic, 60, 120, "Diastolic", alerts);
         return alerts;
     }
 
@@ -49,16 +49,17 @@ public class BloodPressureStrategy implements AlertStrategy {
         }
     }
 
-    private void addThresholdAlert(Patient patient, List<PatientRecord> records, double low,
-            double high, List<Alert> alerts) {
-        if (records.isEmpty()) {
-            return;
-        }
-        PatientRecord last = records.get(records.size() - 1);
-        double value = last.getMeasurementValue();
-        if (value > high || value < low) {
-            alerts.add(alertFactory.createAlert(String.valueOf(patient.getPatientId()),
-                    "Critical Blood Pressure", last.getTimestamp()));
+    private void addThresholdAlerts(Patient patient, List<PatientRecord> records, double low,
+            double high, String pressureType, List<Alert> alerts) {
+        for (PatientRecord record : records) {
+            double value = record.getMeasurementValue();
+            if (value > high) {
+                alerts.add(alertFactory.createAlert(String.valueOf(patient.getPatientId()),
+                        "High " + pressureType + " Blood Pressure", record.getTimestamp()));
+            } else if (value < low) {
+                alerts.add(alertFactory.createAlert(String.valueOf(patient.getPatientId()),
+                        "Low " + pressureType + " Blood Pressure", record.getTimestamp()));
+            }
         }
     }
 }
